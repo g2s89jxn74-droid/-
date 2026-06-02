@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>디지털 국악기 박물관</title>
+
+<style>
+body{
+font-family:'맑은 고딕',sans-serif;
+margin:0;
+background:#f5f1e8;
+}
+
+header{
+background:#8b5a2b;
+color:white;
+text-align:center;
+padding:20px;
+}
+
+section{
+padding:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:15px;
+}
+
+.card{
+background:white;
+padding:15px;
+border-radius:12px;
+box-shadow:0 2px 6px rgba(0,0,0,0.2);
+}
+
+button{
+background:#8b5a2b;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:8px;
+cursor:pointer;
+}
+
+button:hover{
+background:#a56a33;
+}
+
+.result{
+font-weight:bold;
+margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🎵 디지털 국악기 박물관</h1>
+<p>국악기의 특징을 알아보고 퀴즈도 풀어보세요!</p>
+</header>
+
+<section>
+
+<h2>국악기 전시관</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>가야금</h3>
+<p>12줄을 뜯어 연주하는 대표적인 현악기</p>
+<audio src="sounds/gayageum.mp3"></audio>
+<button onclick="this.previousElementSibling.play()">소리 듣기</button>
+</div>
+
+<div class="card">
+<h3>거문고</h3>
+<p>술대로 줄을 튕겨 연주하는 현악기</p>
+<audio src="sounds/geomungo.mp3"></audio>
+<button onclick="this.previousElementSibling.play()">소리 듣기</button>
+</div>
+
+<div class="card">
+<h3>해금</h3>
+<p>활로 켜는 우리나라의 찰현악기</p>
+<audio src="sounds/haegeum.mp3"></audio>
+<button onclick="this.previousElementSibling.play()">소리 듣기</button>
+</div>
+
+<div class="card">
+<h3>대금</h3>
+<p>청공이 있는 대표적인 관악기</p>
+<audio src="sounds/daegeum.mp3"></audio>
+<button onclick="this.previousElementSibling.play()">소리 듣기</button>
+</div>
+
+<div class="card">
+<h3>소금</h3>
+<p>작고 맑은 음색의 관악기</p>
+<audio src="sounds/sogeum.mp3"></audio>
+<button onclick="this.previousElementSibling.play()">소리 듣기</button>
+</div>
+
+<div class="card">
+<h3>피리</h3>
+<p>겹서 리드를 사용하는 관악기</p>
+<audio src="sounds/piri.mp3"></audio>
+<button onclick="this.previousElementSibling.play()">소리 듣기</button>
+</div>
+
+<div class="card">
+<h3>태평소</h3>
+<p>힘차고 웅장한 소리의 관악기</p>
+<audio src="sounds/taepyeongso.mp3"></audio>
+<button onclick="this.previousElementSibling.play()">소리 듣기</button>
+</div>
+
+<div class="card">
+<h3>장구</h3>
+<p>양쪽 면의 소리가 다른 타악기</p>
+<audio src="sounds/janggu.mp3"></audio>
+<button onclick="this.previousElementSibling.play()">소리 듣기</button>
+</div>
+
+<div class="card">
+<h3>꽹과리</h3>
+<p>금속 타악기</p>
+<audio src="sounds/kkwaenggwari.mp3"></audio>
+<button onclick="this.previousElementSibling.play()">소리 듣기</button>
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2>🎧 소리 듣고 악기 맞히기</h2>
+
+<button onclick="startQuiz()">문제 듣기</button>
+
+<audio id="quizAudio"></audio>
+
+<br><br>
+
+<select id="answer">
+<option>가야금</option>
+<option>거문고</option>
+<option>해금</option>
+<option>대금</option>
+<option>소금</option>
+<option>피리</option>
+<option>태평소</option>
+<option>장구</option>
+<option>꽹과리</option>
+</select>
+
+<button onclick="checkAnswer()">정답 확인</button>
+
+<p class="result" id="quizResult"></p>
+
+</section>
+
+<section>
+
+<h2>🎼 나만의 국악단 만들기</h2>
+
+<input type="text" id="bandName" placeholder="국악단 이름">
+
+<br><br>
+
+<label><input type="checkbox" value="가야금">가야금</label>
+<label><input type="checkbox" value="거문고">거문고</label>
+<label><input type="checkbox" value="해금">해금</label>
+<label><input type="checkbox" value="대금">대금</label>
+<label><input type="checkbox" value="장구">장구</label>
+<label><input type="checkbox" value="꽹과리">꽹과리</label>
+
+<br><br>
+
+<button onclick="makeBand()">국악단 만들기</button>
+
+<p class="result" id="bandResult"></p>
+
+</section>
+
+<script>
+
+const quizData = [
+{sound:"sounds/gayageum.mp3",answer:"가야금"},
+{sound:"sounds/haegeum.mp3",answer:"해금"},
+{sound:"sounds/daegeum.mp3",answer:"대금"},
+{sound:"sounds/janggu.mp3",answer:"장구"},
+{sound:"sounds/kkwaenggwari.mp3",answer:"꽹과리"}
+];
+
+let currentQuiz;
+
+function startQuiz(){
+
+currentQuiz =
+quizData[Math.floor(Math.random()*quizData.length)];
+
+document.getElementById("quizAudio").src =
+currentQuiz.sound;
+
+document.getElementById("quizAudio").play();
+
+}
+
+function checkAnswer(){
+
+if(!currentQuiz){
+document.getElementById("quizResult").innerHTML =
+"먼저 문제 듣기를 눌러주세요!";
+return;
+}
+
+const answer =
+document.getElementById("answer").value;
+
+if(answer === currentQuiz.answer){
+
+document.getElementById("quizResult").innerHTML =
+"🎉 정답입니다!";
+
+}else{
+
+document.getElementById("quizResult").innerHTML =
+"❌ 오답! 정답은 " + currentQuiz.answer;
+
+}
+
+}
+
+function makeBand(){
+
+const name =
+document.getElementById("bandName").value;
+
+const instruments =
+[...document.querySelectorAll('input[type=checkbox]:checked')]
+.map(i=>i.value);
+
+document.getElementById("bandResult").innerHTML =
+"🎼 " + name + "<br>구성: " + instruments.join(", ");
+
+}
+
+</script>
+
+</body>
+</html>
